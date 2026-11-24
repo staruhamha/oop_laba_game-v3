@@ -70,10 +70,10 @@ public:
 
 class ResearchCommand : public Command {
 private:
-	int technologyId;
+	std::string technology;
 
 public:
-	ResearchCommand(std::shared_ptr<GameMediator> mediator, int technologyId);
+	ResearchCommand(std::shared_ptr<GameMediator> mediator, const std::string& technology);
 	void execute() override;
 };
 

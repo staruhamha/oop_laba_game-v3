@@ -14,6 +14,7 @@ private:
 	MaterialsSystem* materialsSystem;
 	CombatSystem* combatSystem;
 	BuildingManager* buildingManager;
+	bool lastOperationSucceeded = false;
 
 public:
 	GameMediator(
@@ -22,6 +23,7 @@ public:
 		MaterialsSystem* materialsSystem,
 		CombatSystem* combatSystem,
 		BuildingManager* buildingManager
+
 	);
 
 	int createUnit(const std::string& type, int x, int y);
@@ -31,7 +33,7 @@ public:
 	void healUnit(int unitId, int targetId);
 	void resolveCombat(int attackerId, int targetId);
 	void buildBuilding(const std::string& buildingType, int x, int y);
-	void startResearch(int technologyId);
+	void startResearch(const std::string& technology);
 	void distributeResources(const std::string& resourceType, int amount, int targetId);
 	void distributeResources(const std::string& resourceType, int amount, const std::string& buildingType);
 	void produceUnit(int buildingId, const std::string& unitType);
@@ -43,4 +45,7 @@ public:
 	void notifyCombatResolved();
 	void notifyBuildingCompleted();
 	void notifyResearchCompleted();
+
+	bool wasLastOperationSuccessful() const;
+	void resetOperationStatus();
 };

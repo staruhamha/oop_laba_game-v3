@@ -71,7 +71,7 @@ void BuildBuildingCommand::execute() {
 	mediator->buildBuilding(buildingType, x, y);
 }
 
-ResearchCommand::ResearchCommand(std::shared_ptr<GameMediator> mediator, int technologyId) : Command(mediator), technologyId(technologyId) {
+ResearchCommand::ResearchCommand(std::shared_ptr<GameMediator> mediator, const std::string& technology) : Command(mediator), technology(technology) {
 }
 
 void ResearchCommand::execute() {
@@ -79,7 +79,7 @@ void ResearchCommand::execute() {
 		return;
 	}
 
-	mediator->startResearch(technologyId);
+	mediator->startResearch(technology);
 }
 
 DistributeResourcesCommand::DistributeResourcesCommand(std::shared_ptr<GameMediator> mediator, const std::string& resourceType, int amount, const std::string& buildingType) : Command(mediator), resourceType(resourceType), amount(amount), buildingType(buildingType) {

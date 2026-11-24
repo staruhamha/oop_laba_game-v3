@@ -1,5 +1,4 @@
-﻿
-#include <iostream>
+﻿#include <iostream>
 #include <ctime>
 #include <cstdlib>
 #include <string>
@@ -9,7 +8,7 @@
 #include "GameFacade.h"
 #include "GameField.h"
 #include "Base.h"
-
+#include "GameController.h"
 #include <Windows.h>
 
 using namespace std;
@@ -157,10 +156,11 @@ int main() {
     setlocale(LC_ALL, "Russian");
     srand(static_cast<unsigned int>(time(nullptr)));
 
-    GameFacade game;
+    auto gameController = std::make_shared<GameController>(1000, 5, 0, 100, 15, 15);
+    GameFacade game(gameController);
 
     GameField gameField(15, 15);
-    TerrainMap terrainMap(15, 15);
+    TerrainMap& terrainMap = gameController->getTerrainMap();
 
     fillTerrainMap(terrainMap);
 

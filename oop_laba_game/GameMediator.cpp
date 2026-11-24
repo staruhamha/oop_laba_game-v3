@@ -8,6 +8,7 @@
 #include "Building.h"
 #include "Health.h"
 #include <iostream>
+#include "UnitTypeInfo.h"
 
 GameMediator::GameMediator(
 	Base* base,
@@ -20,42 +21,51 @@ combatSystem(combatSystem), buildingManager(buildingManager) {
 }
 
 int GameMediator::createUnit(const std::string& type, int x, int y) {
-	if (unitManager == nullptr) {
+	lastOperationSucceeded = false;
+
+	if (!unitManager) {
 		return -1;
 	}
 
-	std::shared_ptr<Unit> unit = unitManager->createUnit(x, y, type);
+	auto unit = unitManager->createUnit(x, y, type);
 
-	if (unit == nullptr) {
+	if (!unit) {
 		return -1;
 	}
 
+	lastOperationSucceeded = true;
 	notifyUnitCreated();
-
 	return unit->getId();
 }
 
 void GameMediator::moveUnit(int unitId, int x, int y) {
-	if (unitManager == nullptr) {
+	lastOperationSucceeded = false;
+
+	if (!unitManager) {
 		return;
 	}
 
-	unitManager->moveUnit(unitId, x, y);
+	if (unitManager->moveUnit(unitId, x, y)) {
+		lastOperationSucceeded = true;
+	}
 }
-
 void GameMediator::attack(int attackerId, int targetId) {
-	if (unitManager == nullptr || combatSystem == nullptr) {
+	lastOperationSucceeded = false;
+
+	if (!unitManager || !combatSystem) {
 		return;
 	}
 
-	std::shared_ptr<Unit> attacker = unitManager->getUnit(attackerId);
-	std::shared_ptr<Unit> target = unitManager->getUnit(targetId);
+	auto attacker = unitManager->getUnitById(attackerId);
+	auto target = unitManager->getUnitById(targetId);
 
-	if (attacker == nullptr || target == nullptr) {
+	if (!attacker || !target) {
+		std::cout << "Юнит не найден." << std::endl;
 		return;
 	}
 
 	combatSystem->attack(*attacker, *target);
+	lastOperationSucceeded = true;
 	notifyCombatResolved();
 }
 
@@ -64,39 +74,47 @@ void GameMediator::resolveCombat(int attackerId, int targetId) {
 }
 
 void GameMediator::collectResource(int unitId, int resourcePointId) {
-	if (unitManager == nullptr || materialsSystem == nullptr) {
+	lastOperationSucceeded = false;
+
+	if (!unitManager || !materialsSystem) {
 		return;
 	}
 
 	if (materialsSystem->collectResource(unitId, resourcePointId, 50, unitManager)) {
+		lastOperationSucceeded = true;
 		notifyResourceCollected();
 	}
 	else {
-		std::cout << "Не удалось собрать ресурсы" << std::endl;
+		std::cout << "Не удалось собрать ресурсы." << std::endl;
 	}
 }
 
 void GameMediator::healUnit(int unitId, int targetId) {
-	if (unitManager == nullptr) {
+	lastOperationSucceeded = false;
+
+	if (!unitManager) {
 		return;
 	}
 
-	std::shared_ptr<Unit> unit = unitManager->getUnit(unitId);
-	std::shared_ptr<Unit> target = unitManager->getUnit(targetId);
+	auto unit = unitManager->getUnitById(unitId);
+	auto target = unitManager->getUnitById(targetId);
 
-	if (unit == nullptr || target == nullptr) {
-		std::cout << "Юнит не найден" << std::endl;
+	if (!unit || !target) {
+		std::cout << "Юнит не найден." << std::endl;
 		return;
 	}
 
 	target->restoreHealth(30);
+	lastOperationSucceeded = true;
 
-	std::cout << "Юнит восстановил здоровье другому юниту" << std::endl;
+	std::cout << "Юнит восстановил здоровье цели." << std::endl;
 }
 
 
 void GameMediator::buildBuilding(const std::string& buildingType, int x, int y) {
-	if (buildingManager == nullptr || materialsSystem == nullptr || base == nullptr) {
+	lastOperationSucceeded = false;
+	if (buildingManager == nullptr || materialsSystem == nullptr ||
+		base == nullptr || unitManager == nullptr) {
 		return;
 	}
 
@@ -122,42 +140,66 @@ void GameMediator::buildBuilding(const std::string& buildingType, int x, int y) 
 		return;
 	}
 
-	if (!materialsSystem->spendWood(cost)) {
+	if (!unitManager->isPositionValid(x, y)) {
+		std::cout << "Недопустимые координаты строительства" << std::endl;
+		return;
+	}
+
+	if (unitManager->isPositionOccupied(x, y)) {
+		std::cout << "Клетка занята юнитом" << std::endl;
+		return;
+	}
+
+	for (const auto& building : buildingManager->getBuildings()) {
+		if (building != nullptr && building->getX() == x && building->getY() == y) {
+			std::cout << "Клетка занята зданием" << std::endl;
+			return;
+		}
+	}
+
+	if (materialsSystem->getWood() < cost) {
 		std::cout << "Недостаточно дерева для строительства" << std::endl;
 		return;
 	}
 
-	std::shared_ptr<Building> building = buildingManager->buildBuilding(buildingType, x, y);
+	std::shared_ptr<Building> building =
+		buildingManager->buildBuilding(buildingType, x, y);
 
 	if (building == nullptr) {
+		std::cout << "Не удалось построить здание" << std::endl;
+		return;
+	}
+
+	if (!materialsSystem->spendWood(cost)) {
+		std::cout << "Не удалось списать ресурсы" << std::endl;
 		return;
 	}
 
 	base->addBuilding(building);
-
+	lastOperationSucceeded = true;
 	std::cout << "Здание построено: " << buildingType << std::endl;
 	notifyBuildingCompleted();
 }
 
 
-void GameMediator::startResearch(int technologyId) {
+void GameMediator::startResearch(const std::string& technology) {
+	lastOperationSucceeded = false;
 	if (buildingManager == nullptr) {
 		return;
 	}
 
 	std::string researchName;
 
-	switch (technologyId) {
-	case 1:
+	if (technology == "attack_upgrade") {
 		researchName = "Улучшение оружия";
-		break;
-	case 2:
+	}
+	else if (technology == "defense_upgrade") {
 		researchName = "Улучшение защиты";
-		break;
-	case 3:
+	}
+	else if (technology == "production_upgrade") {
 		researchName = "Улучшение производства";
-		break;
-	default:
+	}
+	else {
 		std::cout << "Неизвестная технология" << std::endl;
 		return;
 	}
@@ -165,6 +207,7 @@ void GameMediator::startResearch(int technologyId) {
 	for (const auto& building : buildingManager->getBuildings()) {
 		if (building != nullptr && building->getType() == "Laboratory") {
 			if (buildingManager->startResearch(building->getId(), researchName)) {
+				lastOperationSucceeded = true;
 				notifyResearchCompleted();
 			}
 			return;
@@ -175,11 +218,14 @@ void GameMediator::startResearch(int technologyId) {
 }
 
 void GameMediator::distributeResources(const std::string& resourceType, int amount, int targetId) {
+	lastOperationSucceeded = false;
+
 	if (unitManager == nullptr || materialsSystem == nullptr) {
 		return;
 	}
 
 	if (materialsSystem->distribute(resourceType, amount, targetId, unitManager)) {
+		lastOperationSucceeded = true;
 		std::cout << "Ресурсы переданы юниту с ID " << targetId << std::endl;
 	}
 	else {
@@ -189,25 +235,97 @@ void GameMediator::distributeResources(const std::string& resourceType, int amou
 
 
 void GameMediator::produceUnit(int buildingId, const std::string& unitType) {
-	if (unitManager == nullptr || buildingManager == nullptr) {
+	lastOperationSucceeded = false;
+
+	if (unitManager == nullptr || buildingManager == nullptr ||
+		materialsSystem == nullptr) {
 		return;
 	}
 
 	std::shared_ptr<Building> building = buildingManager->getBuildingById(buildingId);
 
-	if (building == nullptr) {
-		std::cout << "Указанное здание не найдено" << std::endl;
+	if (building == nullptr || building->getType() != "Barracks") {
+		std::cout << "Для производства нужна казарма" << std::endl;
 		return;
 	}
 
-	if (buildingManager->produceUnit(buildingId, unitType)) {
-		if (unitManager->createUnit(0, 0, unitType) != nullptr) {
-			notifyUnitCreated();
-		}
+	UnitType type;
+	std::string factoryType;
+
+	if (unitType == "Infantry") {
+		type = UnitType::Assault;
+		factoryType = "Infantry";
+	}
+	else if (unitType == "Marksman") {
+		type = UnitType::Marksman;
+		factoryType = "Sniper";
+	}
+	else if (unitType == "Specialist") {
+		type = UnitType::Specialist;
+		factoryType = "Pyro";
+	}
+	else if (unitType == "JetpackUnit") {
+		type = UnitType::JetpackUnit;
+		factoryType = "JetpackTrooper";
 	}
 	else {
-		std::cout << "Не удалось произвести юнита" << std::endl;
+		std::cout << "Неизвестный тип юнита" << std::endl;
+		return;
 	}
+
+	int cost = UnitTypeInfo::getInfo(type)->cost;
+
+	if (materialsSystem->getWood() < cost) {
+		std::cout << "Недостаточно дерева для производства" << std::endl;
+		return;
+	}
+
+	int x = building->getX();
+	int y = building->getY() + 1;
+
+	if (!unitManager->isPositionValid(x, y) ||
+		unitManager->isPositionOccupied(x, y)) {
+		x = building->getX() + 1;
+		y = building->getY();
+	}
+
+	if (!unitManager->isPositionValid(x, y) ||
+		unitManager->isPositionOccupied(x, y)) {
+		x = building->getX();
+		y = building->getY() - 1;
+	}
+
+	if (!unitManager->isPositionValid(x, y) ||
+		unitManager->isPositionOccupied(x, y)) {
+		x = building->getX() - 1;
+		y = building->getY();
+	}
+
+	if (!unitManager->isPositionValid(x, y) ||
+		unitManager->isPositionOccupied(x, y)) {
+		std::cout << "Нет свободной клетки для юнита" << std::endl;
+		return;
+	}
+
+	std::shared_ptr<Unit> unit = unitManager->createUnit(x, y, factoryType);
+
+	if (unit == nullptr) {
+		std::cout << "Не удалось создать юнита" << std::endl;
+		return;
+	}
+
+	if (!buildingManager->produceUnit(buildingId, unitType)) {
+		unitManager->removeUnit(unit->getId());
+		std::cout << "Не удалось произвести юнита" << std::endl;
+		return;
+	}
+
+	materialsSystem->spendWood(cost);
+
+	lastOperationSucceeded = true;
+	notifyUnitCreated();
+
+	std::cout << "Юнит произведён: " << unitType << std::endl;
 }
 
 void GameMediator::getStats(const std::string& parameter) {
@@ -266,6 +384,12 @@ void GameMediator::notifyResearchCompleted() {
 }
 
 void GameMediator::distributeResources(const std::string& resourceType, int amount, const std::string& buildingType) {
+	lastOperationSucceeded = false;
+
+	if (buildingManager == nullptr || materialsSystem == nullptr) {
+		return;
+	}
+
 	if (amount <= 0) {
 		std::cout << "Количество ресурсов должно быть положительным\n";
 		return;
@@ -303,5 +427,14 @@ void GameMediator::distributeResources(const std::string& resourceType, int amou
 		building->addWood(amount);
 	}
 
+	lastOperationSucceeded = true;
 	std::cout << "Ресурсы переданы зданию " << buildingType << ": " << amount << "\n";
+}
+
+bool GameMediator::wasLastOperationSuccessful() const {
+	return lastOperationSucceeded;
+}
+
+void GameMediator::resetOperationStatus() {
+	lastOperationSucceeded = false;
 }

@@ -5,11 +5,12 @@
 
 class Base;
 class Unit;
+class TerrainMap;
 
 class UnitManager {
 private:
 	Base* base;
-
+	TerrainMap* terrainMap = nullptr;
 public:
 	UnitManager(Base* base);
 
@@ -18,4 +19,7 @@ public:
 	std::shared_ptr<Unit> getUnitById(int unitId);
 	bool moveUnit(int unitId, int x, int y);
 	bool removeUnit(int unitId);
+	void setTerrainMap(TerrainMap* terrainMap);
+	bool isPositionValid(int x, int y) const;
+	bool isPositionOccupied(int x, int y) const;
 };

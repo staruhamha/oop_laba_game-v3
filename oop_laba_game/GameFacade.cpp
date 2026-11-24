@@ -8,10 +8,12 @@
 #include "MaterialsSystem.h"
 #include "CombatSystem.h"
 #include "BuildingManager.h"
+#include "GameController.h"
+#include <iostream>
 
-GameFacade::GameFacade() {
-	base = std::make_unique<Base>(1000, 5, 0, 100);
-	unitManager = std::make_unique<UnitManager>(base.get());
+GameFacade::GameFacade(std::shared_ptr<GameController> gameController) : gameController(gameController) {
+
+	unitManager = std::make_unique<UnitManager>(&gameController->getBase());
 	materialsSystem = std::make_unique<MaterialsSystem>(1000, 100, 100);
 
 	materialsSystem->addResourcePoint("Wood", 200);
@@ -22,7 +24,7 @@ GameFacade::GameFacade() {
 	buildingManager = std::make_unique<BuildingManager>();
 
 	mediator = std::make_shared<GameMediator>(
-		base.get(),
+		&gameController->getBase(),
 		unitManager.get(),
 		materialsSystem.get(),
 		combatSystem.get(),
@@ -53,7 +55,10 @@ GameFacade::GameFacade() {
 	produceHandler->setNext(statsHandler);
 
 	handler = createHandler;
+
+	unitManager->setTerrainMap(&gameController->getTerrainMap());
 }
+
 
 GameFacade::~GameFacade() = default;
 
@@ -89,8 +94,8 @@ void GameFacade::buildBuilding(const std::string& buildingType, int x, int y) {
 	executeCommand(command);
 }
 
-void GameFacade::research(int technologyId) {
-	auto command = std::make_shared<ResearchCommand>(mediator, technologyId);
+void GameFacade::research(const std::string& technology) {
+	auto command = std::make_shared<ResearchCommand>(mediator, technology);
 	executeCommand(command);
 }
 
@@ -117,13 +122,39 @@ void GameFacade::executeCommand(std::shared_ptr<Command> command) {
 }
 
 bool GameFacade::processInput(const std::string& input) {
+	mediator->resetOperationStatus();
+
+	bool result = false;
+
 	if (handler) {
-		return handler->handle(input);
+		result = handler->handle(input);
 	}
 
-	return false;
+	if (!result) {
+		commandLog.push_back("Неизвестная команда: " + input);
+	}
+	else if (mediator->wasLastOperationSuccessful()) {
+		commandLog.push_back("Успешно: " + input);
+	}
+	else {
+		commandLog.push_back("Не выполнено: " + input);
+	}
+
+	return result;
 }
 
 Base* GameFacade::getBase() const {
-	return base.get();
+	return &gameController->getBase();
+}
+
+void GameFacade::setTerrainMap(TerrainMap* terrainMap) {
+	unitManager->setTerrainMap(terrainMap);
+}
+
+void GameFacade::showCommandLog() const {
+	std::cout << "\nЖурнал команд:\n";
+
+	for (const std::string& entry : commandLog) {
+		std::cout << entry << std::endl;
+	}
 }
