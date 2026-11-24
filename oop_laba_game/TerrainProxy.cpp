@@ -46,3 +46,7 @@ int TerrainProxy::getDefenseBonus(UnitType type) const {
 
 	return bonus;
 }
+
+const Terrain* TerrainProxy::getRealTerrain() const {
+	return realTerrain.get();
+}

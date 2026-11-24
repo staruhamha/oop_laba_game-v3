@@ -119,3 +119,54 @@ string JetpackTrooper::getType() const {
 unique_ptr<Unit> JetpackTrooper::clone() const {
 	return make_unique<JetpackTrooper>(*this);
 }
+
+Infantry::Infantry(int x, int y)
+	: Assault(x, y, Health(200), Armor(40), Attack(20), UnitType::Assault) {
+}
+
+string Infantry::getType() const {
+	return "Infantry";
+}
+
+unique_ptr<Unit> Infantry::clone() const {
+	return make_unique<Infantry>(*this);
+}
+
+
+Scout::Scout(int x, int y)
+	: Marksman(x, y, Health(120), Armor(15), Attack(35), UnitType::Marksman) {
+}
+
+string Scout::getType() const {
+	return "Scout";
+}
+
+unique_ptr<Unit> Scout::clone() const {
+	return make_unique<Scout>(*this);
+}
+
+
+Tank::Tank(int x, int y)
+	: Assault(x, y, Health(350), Armor(120), Attack(30), UnitType::Assault) {
+}
+
+string Tank::getType() const {
+	return "Tank";
+}
+
+unique_ptr<Unit> Tank::clone() const {
+	return make_unique<Tank>(*this);
+}
+
+
+Worker::Worker(int x, int y)
+	: Specialist(x, y, Health(130), Armor(20), Attack(10), UnitType::Specialist) {
+}
+
+string Worker::getType() const {
+	return "Worker";
+}
+
+unique_ptr<Unit> Worker::clone() const {
+	return make_unique<Worker>(*this);
+}

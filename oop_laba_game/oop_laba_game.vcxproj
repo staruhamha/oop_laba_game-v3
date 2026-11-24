@@ -127,40 +127,78 @@
     <ClCompile Include="Attack.cpp" />
     <ClCompile Include="AttackBoostStrategy.cpp" />
     <ClCompile Include="Base.cpp" />
+    <ClCompile Include="Building.cpp" />
+    <ClCompile Include="BuildingManager.cpp" />
+    <ClCompile Include="Buildings.cpp" />
+    <ClCompile Include="CombatSystem.cpp" />
+    <ClCompile Include="Command.cpp" />
+    <ClCompile Include="CommandHistory.cpp" />
     <ClCompile Include="DamageStrategy.cpp" />
+    <ClCompile Include="Energy.cpp" />
     <ClCompile Include="Factories.cpp" />
+    <ClCompile Include="GameCommands.cpp" />
     <ClCompile Include="GameController.cpp" />
+    <ClCompile Include="GameFacade.cpp" />
     <ClCompile Include="GameField.cpp" />
     <ClCompile Include="GameFieldIterator.cpp" />
+    <ClCompile Include="GameHandlers.cpp" />
+    <ClCompile Include="GameMediator.cpp" />
+    <ClCompile Include="Handler.cpp" />
     <ClCompile Include="Health.cpp" />
     <ClCompile Include="HealthRestoreStrategy.cpp" />
     <ClCompile Include="ManaBoost.cpp" />
     <ClCompile Include="ManaBoostStrategy.cpp" />
+    <ClCompile Include="MaterialsSystem.cpp" />
+    <ClCompile Include="Metal.cpp" />
     <ClCompile Include="NeutralObjects.cpp" />
-    <ClCompile Include="oop_laba_game.cpp" />
+    <ClCompile Include="oop_laba_game.cpp">
+      <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">stdcpp17</LanguageStandard>
+    </ClCompile>
+    <ClCompile Include="ResourcePoint.cpp" />
     <ClCompile Include="ResourceStrategy.cpp" />
     <ClCompile Include="TerrainMap.cpp" />
     <ClCompile Include="TerrainProxy.cpp" />
     <ClCompile Include="TerrainTypes.cpp" />
-    <ClCompile Include="Tests.cpp" />
+    <ClCompile Include="Tests.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Unit.cpp" />
     <ClCompile Include="UnitEvent.cpp" />
     <ClCompile Include="UnitFactory.cpp" />
+    <ClCompile Include="UnitManager.cpp" />
     <ClCompile Include="Units.cpp" />
-    <ClCompile Include="UnitTypeInfo.cpp" />
+    <ClCompile Include="UnitTypeInfo.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="UnitTypeInfo.h" />
     <ClCompile Include="UnitTypes.cpp" />
+    <ClCompile Include="Wood.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Armor.h" />
     <ClInclude Include="Attack.h" />
     <ClInclude Include="AttackBoostStrategy.h" />
     <ClInclude Include="Base.h" />
+    <ClInclude Include="Building.h" />
+    <ClInclude Include="BuildingManager.h" />
+    <ClInclude Include="Buildings.h" />
+    <ClInclude Include="CombatSystem.h" />
+    <ClInclude Include="Command.h" />
+    <ClInclude Include="CommandHistory.h" />
     <ClInclude Include="DamageStrategy.h" />
+    <ClInclude Include="Energy.h" />
     <ClInclude Include="Factories.h" />
+    <ClInclude Include="GameCommands.h" />
     <ClInclude Include="GameController.h" />
+    <ClInclude Include="GameFacade.h" />
     <ClInclude Include="GameField.h" />
     <ClInclude Include="GameFieldIterator.h" />
+    <ClInclude Include="GameHandlers.h" />
+    <ClInclude Include="GameMediator.h" />
+    <ClInclude Include="Handler.h" />
     <ClInclude Include="Health.h" />
     <ClInclude Include="HealthRestoreStrategy.h" />
     <ClInclude Include="IInteractionStrategy.h" />
@@ -168,8 +206,11 @@
     <ClInclude Include="IObserver.h" />
     <ClInclude Include="ManaBoost.h" />
     <ClInclude Include="ManaBoostStrategy.h" />
+    <ClInclude Include="Metal.h" />
     <ClInclude Include="NeutralObjects.h" />
+    <ClInclude Include="ResourcePoint.h" />
     <ClInclude Include="ResourceStrategy.h" />
+    <ClInclude Include="MaterialsSystem.h" />
     <ClInclude Include="Terrain.h" />
     <ClInclude Include="TerrainMap.h" />
     <ClInclude Include="TerrainProxy.h" />
@@ -178,8 +219,10 @@
     <ClInclude Include="Unit.h" />
     <ClInclude Include="UnitEvent.h" />
     <ClInclude Include="UnitFactory.h" />
+    <ClInclude Include="UnitManager.h" />
     <ClInclude Include="Units.h" />
     <ClInclude Include="UnitTypes.h" />
+    <ClInclude Include="Wood.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="readme.txt" />

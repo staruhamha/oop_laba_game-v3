@@ -43,6 +43,24 @@
     <Filter Include="Исходные файлы\Controller">
       <UniqueIdentifier>{ad1aa2be-b12d-4d90-8b93-f3375e1845da}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Исходные файлы\Materials">
+      <UniqueIdentifier>{13fe8c5d-931b-46d1-a681-174965cad488}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Facade">
+      <UniqueIdentifier>{a3525cb8-f902-4c5a-88de-ca320dfa54f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Mediator">
+      <UniqueIdentifier>{e282295f-ed59-4744-b725-03e237475804}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Handlers">
+      <UniqueIdentifier>{671fb2c1-45f7-4fec-9a3c-41523c219f19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Commands">
+      <UniqueIdentifier>{3d0cbd93-c128-42a3-88b8-9a7c73806162}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Building">
+      <UniqueIdentifier>{b6868085-d2a6-4905-9ff4-207c666046c7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="oop_laba_game.cpp">
@@ -125,6 +143,57 @@
     </ClCompile>
     <ClCompile Include="GameController.cpp">
       <Filter>Исходные файлы\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="Wood.cpp">
+      <Filter>Исходные файлы\Materials</Filter>
+    </ClCompile>
+    <ClCompile Include="Metal.cpp">
+      <Filter>Исходные файлы\Materials</Filter>
+    </ClCompile>
+    <ClCompile Include="Energy.cpp">
+      <Filter>Исходные файлы\Materials</Filter>
+    </ClCompile>
+    <ClCompile Include="Handler.cpp">
+      <Filter>Исходные файлы\Handlers</Filter>
+    </ClCompile>
+    <ClCompile Include="Command.cpp">
+      <Filter>Исходные файлы\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCommands.cpp">
+      <Filter>Исходные файлы\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="GameMediator.cpp">
+      <Filter>Исходные файлы\Mediator</Filter>
+    </ClCompile>
+    <ClCompile Include="GameHandlers.cpp">
+      <Filter>Исходные файлы\Handlers</Filter>
+    </ClCompile>
+    <ClCompile Include="GameFacade.cpp">
+      <Filter>Исходные файлы\Facade</Filter>
+    </ClCompile>
+    <ClCompile Include="Building.cpp">
+      <Filter>Исходные файлы\Building</Filter>
+    </ClCompile>
+    <ClCompile Include="BuildingManager.cpp">
+      <Filter>Исходные файлы\Building</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialsSystem.cpp">
+      <Filter>Исходные файлы\Materials</Filter>
+    </ClCompile>
+    <ClCompile Include="CombatSystem.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="UnitManager.cpp">
+      <Filter>Исходные файлы\Unit</Filter>
+    </ClCompile>
+    <ClCompile Include="Buildings.cpp">
+      <Filter>Исходные файлы\Building</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandHistory.cpp">
+      <Filter>Исходные файлы\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourcePoint.cpp">
+      <Filter>Исходные файлы\Materials</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -211,6 +280,57 @@
     </ClInclude>
     <ClInclude Include="GameController.h">
       <Filter>Исходные файлы\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="Wood.h">
+      <Filter>Исходные файлы\Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="Metal.h">
+      <Filter>Исходные файлы\Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="Energy.h">
+      <Filter>Исходные файлы\Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="GameFacade.h">
+      <Filter>Исходные файлы\Facade</Filter>
+    </ClInclude>
+    <ClInclude Include="GameMediator.h">
+      <Filter>Исходные файлы\Mediator</Filter>
+    </ClInclude>
+    <ClInclude Include="Handler.h">
+      <Filter>Исходные файлы\Handlers</Filter>
+    </ClInclude>
+    <ClInclude Include="Command.h">
+      <Filter>Исходные файлы\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCommands.h">
+      <Filter>Исходные файлы\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="GameHandlers.h">
+      <Filter>Исходные файлы\Handlers</Filter>
+    </ClInclude>
+    <ClInclude Include="Building.h">
+      <Filter>Исходные файлы\Building</Filter>
+    </ClInclude>
+    <ClInclude Include="BuildingManager.h">
+      <Filter>Исходные файлы\Building</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialsSystem.h">
+      <Filter>Исходные файлы\Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="CombatSystem.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="UnitManager.h">
+      <Filter>Исходные файлы\Unit</Filter>
+    </ClInclude>
+    <ClInclude Include="Buildings.h">
+      <Filter>Исходные файлы\Building</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandHistory.h">
+      <Filter>Исходные файлы\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourcePoint.h">
+      <Filter>Исходные файлы\Materials</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

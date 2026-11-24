@@ -1,5 +1,8 @@
 #include "TerrainMap.h"
 #include "TerrainProxy.h"
+#include "TerrainTypes.h"
+#include <iostream>
+#include <windows.h>
 
 TerrainMap::TerrainMap(int width, int height) {
 	map.resize(height);
@@ -60,3 +63,4 @@ int TerrainMap::getWidth() const {
 int TerrainMap::getHeight() const {
 	return static_cast<int>(map.size());
 }
+

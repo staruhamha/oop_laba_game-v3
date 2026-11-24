@@ -24,4 +24,6 @@ public:
 	void setNeutralObjectAt(int x, int y, std::shared_ptr<NeutralObject> object);
 	int getWidth() const;
 	int getHeight() const;
+
+	
 };

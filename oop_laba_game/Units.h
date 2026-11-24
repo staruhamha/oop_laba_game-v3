@@ -80,3 +80,35 @@ public:
     std::string getType() const override;
     std::unique_ptr<Unit> clone() const override;
 };
+
+class Infantry : public Assault {
+public:
+    Infantry(int x, int y);
+
+    std::string getType() const override;
+    std::unique_ptr<Unit> clone() const override;
+};
+
+class Scout : public Marksman {
+public:
+    Scout(int x, int y);
+
+    std::string getType() const override;
+    std::unique_ptr<Unit> clone() const override;
+};
+
+class Tank : public Assault {
+public:
+    Tank(int x, int y);
+
+    std::string getType() const override;
+    std::unique_ptr<Unit> clone() const override;
+};
+
+class Worker : public Specialist {
+public:
+    Worker(int x, int y);
+
+    std::string getType() const override;
+    std::unique_ptr<Unit> clone() const override;
+};

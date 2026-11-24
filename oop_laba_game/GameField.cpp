@@ -2,6 +2,11 @@
 #include <utility>
 #include "UnitFactory.h"
 #include <iostream>
+#include "TerrainMap.h"
+#include "TerrainProxy.h"
+#include "TerrainTypes.h"
+#include <Windows.h>
+
 using namespace std;
 
 GameField::GameField(const GameField& other) : width(other.width), height(other.height), maxUnits(other.maxUnits) {
@@ -104,47 +109,68 @@ void GameField::fill(const UnitFactory& factory, const vector<string>& types) {
 	}
 }
 
-void GameField::printField() const {
+void GameField::printField(const vector<shared_ptr<Unit>>& units, const TerrainMap& terrainMap) const {
+	HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
+
 	for (int x = 0; x <= width; x++) {
 		cout << "X ";
 	}
 	cout << "X\n";
+
 	for (int y = 0; y < height; y++) {
 		cout << "X ";
 
 		for (int x = 0; x < width; x++) {
-			char symbol = ' ';
-			
+			char symbol = '_';
+			WORD color = FOREGROUND_GREEN | FOREGROUND_INTENSITY;
+
+			Terrain* terrain = terrainMap.getTerrain(x, y);
+
+			if (terrain != nullptr) {
+				const TerrainProxy* proxy = dynamic_cast<const TerrainProxy*>(terrain);
+
+				if (proxy != nullptr) {
+					const Terrain* realTerrain = proxy->getRealTerrain();
+
+					if (dynamic_cast<const Forest*>(realTerrain)) {
+						symbol = '*';
+						color = FOREGROUND_GREEN | FOREGROUND_INTENSITY;
+					}
+					else if (dynamic_cast<const Swamp*>(realTerrain)) {
+						symbol = '~';
+						color = FOREGROUND_BLUE | FOREGROUND_INTENSITY;
+					}
+					else if (dynamic_cast<const Mountains*>(realTerrain)) {
+						symbol = '^';
+						color = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
+					}
+				}
+			}
+
 			for (const auto& unit : units) {
-				if (unit->getX() == x && unit->getY() == y) {
+				if (unit != nullptr && unit->getX() == x && unit->getY() == y) {
 					string type = unit->getType();
 
-					if (type == "Soldier") {
-						symbol = 'S';
-					}
-					else if (type == "Pyro") {
-						symbol = 'P';
+					if (type == "Soldier" || type == "Infantry") symbol = 'S';
+					else if (type == "Scout") symbol = 'C';
+					else if (type == "Pyro") symbol = 'P';
+					else if (type == "Heavy") symbol = 'H';
+					else if (type == "Engineer") symbol = 'E';
+					else if (type == "Medic" || type == "FieldMedic") symbol = 'M';
+					else if (type == "Sniper") symbol = 'N';
 
-					}
-					else if (type == "Heavy") {
-						symbol = 'H';
-					}
-					else if (type == "Engineer") {
-						symbol = 'E';
-					}
-					else if (type == "Medic") {
-						symbol = 'M';
-					}
-					else if (type == "Sniper") {
-						symbol = 'N';
-					}
 					break;
 				}
 			}
+
+			SetConsoleTextAttribute(console, color);
 			cout << symbol << " ";
+			SetConsoleTextAttribute(console, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
 		}
+
 		cout << "X\n";
 	}
+
 	for (int x = 0; x <= width; x++) {
 		cout << "X ";
 	}

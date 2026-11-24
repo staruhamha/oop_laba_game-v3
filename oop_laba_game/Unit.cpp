@@ -5,10 +5,10 @@ namespace {
     int nextUnitId = 1;
 }
 
-Unit::Unit(int x, int y, const Health& health, const Armor& armor, const Attack& attack, UnitType type): id(nextUnitId++), x(x), y(y), health(health), armor(armor), attackComponent(attack), typeInfo(UnitTypeInfo::getInfo(type)) {
+Unit::Unit(int x, int y, const Health& health, const Armor& armor, const Attack& attack, UnitType type) : id(nextUnitId++), x(x), y(y), mana(0), currentOrder(""), health(health), armor(armor), attackComponent(attack), typeInfo(UnitTypeInfo::getInfo(type)) {
 }
 
-Unit::Unit(const Unit& other) : id(nextUnitId++), x(other.x), y(other.y), mana(other.mana), health(other.health), armor(other.armor), attackComponent(other.attackComponent), typeInfo(other.typeInfo) {
+Unit::Unit(const Unit& other) : id(nextUnitId++), x(other.x), y(other.y), mana(other.mana), wood(other.wood), metal(other.metal), energy(other.energy), currentOrder(other.currentOrder), health(other.health), armor(other.armor),attackComponent(other.attackComponent), typeInfo(other.typeInfo) {
 }
 
 Unit::~Unit() = default;
@@ -26,6 +26,14 @@ int Unit::getX() const
 int Unit::getY() const
 {
     return y;
+}
+
+const std::string& Unit::getCurrentOrder() const {
+    return currentOrder;
+}
+
+void Unit::setCurrentOrder(const std::string& order) {
+    currentOrder = order;
 }
 
 const Health& Unit::getHealth() const
@@ -53,6 +61,36 @@ void Unit::increaseMana(int amount) {
     }
 }
 
+int Unit::getWood() const {
+    return wood;
+}
+
+int Unit::getMetal() const {
+    return metal;
+}
+
+int Unit::getEnergy() const {
+    return energy;
+}
+
+void Unit::addWood(int amount) {
+    if (amount > 0) {
+        wood += amount;
+    }
+}
+
+void Unit::addMetal(int amount) {
+    if (amount > 0) {
+        metal += amount;
+    }
+}
+
+void Unit::addEnergy(int amount) {
+    if (amount > 0) {
+        energy += amount;
+    }
+}
+
 void Unit::move(int dx, int dy)
 {
     x += dx;
@@ -66,6 +104,18 @@ void Unit::takeDamage(int damage) {
     health.decrease(remainDamage);
 
     notify(UnitEvent(UnitEventType::Damaged, id, remainDamage));
+
+    if (wasAlive && health.isZero()) {
+        notify(UnitEvent(UnitEventType::Destroyed, id, 0));
+    }
+}
+
+void Unit::takeDamageAfterArmor(int damage) {
+    bool wasAlive = !health.isZero();
+
+    health.decrease(damage);
+
+    notify(UnitEvent(UnitEventType::Damaged, id, damage));
 
     if (wasAlive && health.isZero()) {
         notify(UnitEvent(UnitEventType::Destroyed, id, 0));

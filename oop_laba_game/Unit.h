@@ -17,6 +17,12 @@ private:
 	int y;
 	int mana = 0;
 
+	int wood = 0;
+	int metal = 0;
+	int energy = 0;
+
+	std::string currentOrder;
+
 	Health health;
 	Armor armor;
 	Attack attackComponent;
@@ -33,9 +39,19 @@ public:
 	int getId() const;
 	int getX() const;
 	int getY() const;
+	const std::string& getCurrentOrder() const;
+	void setCurrentOrder(const std::string& order);
 
 	int getMana() const;
 	void increaseMana(int amount);
+
+	int getWood() const;
+	int getMetal() const;
+	int getEnergy() const;
+
+	void addWood(int amount);
+	void addMetal(int amount);
+	void addEnergy(int amount);
 
 	const Health& getHealth() const;
 	const Armor& getArmor() const;
@@ -46,6 +62,7 @@ public:
 	virtual std::unique_ptr<Unit> clone() const = 0;
 
 	virtual void takeDamage(int damage) = 0;
+	void takeDamageAfterArmor(int damage);
 	void restoreHealth(int amount);
 	void increaseAttack(int amount);
 	int calculateDamage() const;

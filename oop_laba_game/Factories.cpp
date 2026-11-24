@@ -15,7 +15,12 @@ unique_ptr<Unit> AssaultFactory::createUnit(int x, int y, const string& type) co
 	if (type == "Grenadier") {
 		return make_unique<Grenadier>(x, y);
 	}
-
+	if (type == "Infantry") {
+		return make_unique<Infantry>(x, y);
+	}
+	if (type == "Tank") {
+		return make_unique<Tank>(x, y);
+	}
 	return nullptr;
 }
 
@@ -24,7 +29,9 @@ unique_ptr<Unit> MarksmanFactory::createUnit(int x, int y, const string& type) c
 	if (type == "Sniper") {
 		return make_unique<Sniper>(x, y);
 	}
-
+	if (type == "Scout") {
+		return make_unique<Scout>(x, y);
+	}
 	return nullptr;
 }
 
@@ -42,7 +49,9 @@ unique_ptr<Unit> SpecialistFactory::createUnit(int x, int y, const string& type)
 	if (type == "FieldMedic") {
 		return make_unique<FieldMedic>(x, y);
 	}
-
+	if (type == "Worker") {
+		return make_unique<Worker>(x, y);
+	}
 	return nullptr;
 }
 

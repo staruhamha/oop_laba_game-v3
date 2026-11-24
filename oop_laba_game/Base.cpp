@@ -1,7 +1,7 @@
 #include "Base.h"
 #include "Factories.h"
 #include <iostream>
-
+#include "Building.h"
 
 Base::Base(int health, int maxUnits, int defenseLevel, int resources) : health(health), maxUnits(maxUnits), unitCount(0), defenseLevel(defenseLevel), resources(resources) {
 }
@@ -38,6 +38,10 @@ void Base::setDefenseLevel(int defenseLevel) {
 
 void Base::addResources(int amount) {
 	resources += amount;
+}
+
+const std::vector<std::shared_ptr<Unit>>& Base::getUnits() const {
+	return units;
 }
 
 void Base::onUnitEvent(const UnitEvent& event) {
@@ -104,6 +108,16 @@ std::shared_ptr<Unit> Base::createUnit(int x, int y, const std::string& type) {
 	return unit;
 }
 
+std::shared_ptr<Unit> Base::getUnit(int unitId) const {
+	for (const auto& unit : units) {
+		if (unit->getId() == unitId) {
+			return unit;
+		}
+	}
+
+	return nullptr;
+}
+
 void Base::removeUnit(int unitId) {
 	for (auto it = units.begin(); it != units.end(); ++it) {
 		if ((*it)->getId() == unitId) {
@@ -112,4 +126,28 @@ void Base::removeUnit(int unitId) {
 			break;
 		}
 	}
+}
+
+void Base::addBuilding(const std::shared_ptr<Building>& building) {
+	if (building != nullptr) {
+		buildings.push_back(building);
+	}
+}
+
+std::shared_ptr<Building> Base::getBuilding(int buildingId) const {
+	for (const auto& building : buildings) {
+		if (building->getId() == buildingId) {
+			return building;
+		}
+	}
+
+	return nullptr;
+}
+
+int Base::getBuildingCount() const {
+	return static_cast<int>(buildings.size());
+}
+
+const std::vector<std::shared_ptr<Building>>& Base::getBuildings() const {
+	return buildings;
 }

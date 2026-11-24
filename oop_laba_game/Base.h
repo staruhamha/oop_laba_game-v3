@@ -6,6 +6,8 @@
 #include "IObserver.h"
 #include <string>
 
+class Building;
+
 class Base : public IObserver {
 private:
 	int health;
@@ -14,7 +16,7 @@ private:
 	int defenseLevel;
 	int resources;
 	std::vector<std::shared_ptr<Unit>> units;
-	
+	std::vector<std::shared_ptr<Building>> buildings;
 
 public:
 	Base(int health, int maxUnits, int defenseLevel, int resources);
@@ -34,8 +36,14 @@ public:
 	void addResources(int amount);
 
 	void onUnitEvent(const UnitEvent& event) override;
-
+	const std::vector<std::shared_ptr<Unit>>& getUnits() const;
 	void addUnit(const std::shared_ptr<Unit>& unit);
 	std::shared_ptr<Unit> createUnit(int x, int y, const std::string& type);
+	std::shared_ptr<Unit> getUnit(int unitId) const;
 	void removeUnit(int unitId);
+
+	void addBuilding(const std::shared_ptr<Building>& building);
+	std::shared_ptr<Building> getBuilding(int buildingId) const;
+	int getBuildingCount() const;
+	const std::vector<std::shared_ptr<Building>>& getBuildings() const;
 };

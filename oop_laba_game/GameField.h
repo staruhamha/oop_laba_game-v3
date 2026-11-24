@@ -7,6 +7,7 @@
 
 class UnitFactory;
 class GameFieldIterator;
+class TerrainMap;
 
 class GameField {
 	friend class GameFieldIterator;
@@ -39,5 +40,5 @@ public:
 	void removeUnit(int index);
 	void fill(const UnitFactory& factory, const std::vector<std::string> & types);
 		
-	void printField() const;
+	void printField(const std::vector<std::shared_ptr<Unit>>& units, const TerrainMap& terrainMap) const;
 };

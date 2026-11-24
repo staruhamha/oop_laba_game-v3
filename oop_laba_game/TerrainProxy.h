@@ -13,4 +13,6 @@ public:
 	bool isPassable(UnitType type) const override;
 	float getSpeedModifier(UnitType type) const override;
 	int getDefenseBonus(UnitType type) const override;
+
+	const Terrain* getRealTerrain() const;
 };
